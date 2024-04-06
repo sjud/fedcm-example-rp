@@ -101,6 +101,7 @@ fn Rp() -> impl IntoView {
         </Script>
         </Show>
         </div>
+        /* https://github.com/fedidcg/FedCM/issues/554 ???
         <div>
         <button on:click=move|_|rp_show_user_info.set(!rp_show_user_info.get_untracked())>{
             move || if rp_show_user_info.get() {
@@ -146,11 +147,12 @@ fn Rp() -> impl IntoView {
         </iframe>
         </Show>
         </div>
-        <p id="user_msg"></p>
         <p id="user_msg_2"></p>
         <p id="user_name"></p>
         <p id="user_email"></p>
-        <img id="user_img"/>
+        <img id="user_img"/>*/
+        <p id="user_msg"></p>
+
     }
 }
 #[server]
@@ -180,86 +182,3 @@ fn Idp() -> impl IntoView {
 }
 
 
-
-/*
-    let sign_up = create_rw_signal(false);
-    let register = create_rw_signal(false);
-    let authenticate = create_rw_signal(false);
-
-
-        <div>
-        <button on:click=move|_|sign_up.set(!sign_up.get_untracked())>{
-            move || if sign_up.get() {
-                "Remove Sign Up Script"
-            } else {
-                "Add Sign Up Script"
-            }
-        }</button>
-        <Show when=move||sign_up.get()>
-        <Script>r#"
-        navigator.credentials.get({
-            identity: {
-              context: 'signup',
-              providers: [{
-                configURL: 'http://127.0.0.1:3000/idp/config.json',
-                clientId: "my_client_id",
-                nonce: 123
-              }]
-            }
-          }) .then((credential) => {
-            console.log('Credential obtained:', credential);
-          })
-          .catch((error) => {
-            console.error('Error obtaining credentials:', error);
-          });
-          
-        "#
-        </Script>
-        </Show>
-        </div>
-        <div>
-        <button on:click=move|_|register.set(!register.get_untracked())>{
-            move || if register.get() {
-                "Remove Register Script"
-            } else {
-                "Add Register Script"
-            }
-        }</button>
-        <Show when=move||register.get()>
-        <Script>r#"
-        IdentityProvider.register('http://127.0.0.1:3000/idp/config');
-        "#
-        </Script>
-        </Show>
-        </div>
-        <div>
-        <button on:click=move|_|sign_in.set(!sign_in.get_untracked())>{
-            move || if sign_in.get() {
-                "Remove Sign In Script"
-            } else {
-                "Add Sign In Script"
-            }
-        }</button>
-        <Show when=move||sign_in.get()>
-        <Script>r#"
-        // what here?
-        "#
-        </Script>
-        </Show>
-        </div>
-        <div>
-        <button on:click=move|_|authenticate.set(!authenticate.get_untracked())>{
-            move || if authenticate.get() {
-                "Remove Authenticate Script"
-            } else {
-                "Add Authenticate Script"
-            }
-        }</button>
-        <Show when=move||authenticate.get()>
-        <Script>r#"
-     
-        "#
-        </Script>
-        </Show>
-        </div>
-*/
