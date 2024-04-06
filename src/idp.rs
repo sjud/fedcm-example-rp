@@ -5,10 +5,14 @@ https://developers.google.com/privacy-sandbox/3pcd/fedcm-developer-guide
 */
 
 use axum::{
-    extract::Query,
+    Form,
     routing::{get,post},
     Router,
     Json,
+    http::header::HeaderMap,
+};
+use axum_extra::{
+    extract::cookie::CookieJar,
 };
 use leptos::LeptosOptions;
 use serde::{Serialize,Deserialize};
@@ -48,13 +52,11 @@ pub struct IdentityProviderAPIConfig{
 
 #[tracing::instrument(ret)]
 pub async fn config() -> Json<IdentityProviderAPIConfig> {
-    tracing::trace!("hello");
-
     Json(IdentityProviderAPIConfig {
         accounts_endpoint: "/idp/accounts".into(),
         client_metadata_endpoint: "/idp/metadata".into(),
         id_assertion_endpoint: "/idp/assertion".into(),
-        login_url:  "/idp_login".into(),
+        login_url:  "/idp".into(),
         disconnect_endpoint: Some("/idp/disconnect".into()),
         branding: Some(IdentityProviderBranding {
             background_color: "green".into(),
@@ -88,7 +90,12 @@ pub struct IdentityProviderAccountList{
 }
 
 #[tracing::instrument(ret)]
-pub async fn accounts() -> Json<IdentityProviderAccountList> {
+pub async fn accounts(
+    // expecting Sec-Fetch-Dest: webidentity
+    headers: HeaderMap,
+    jar: CookieJar,
+) -> Json<IdentityProviderAccountList> {
+
     Json(IdentityProviderAccountList {
         accounts: vec![
             IdentityProviderAccount {
@@ -134,9 +141,16 @@ pub struct IdentityProviderToken{
     pub token:String,
 }
 
+#[derive(Clone,Debug,PartialEq,Serialize,Deserialize)]
+pub struct IdentityProviderAssertionForm{
+    pub account_id:String,
+    pub client_id:String,
+    pub nonce:String,
+    pub disclosure_text_shown:bool 
+}
 //account_id=123&client_id=client1234&nonce=Ct60bD&disclosure_text_shown=true
 #[tracing::instrument(ret)]
-pub async fn assertion(account_id:Query<String>,client_id:Query<String>,nonce:Query<String>,disclosure_text_shown:Query<bool>) -> Json<IdentityProviderToken> {
+pub async fn assertion(Form(f):Form<IdentityProviderAssertionForm>) -> Json<IdentityProviderToken> {
     Json(IdentityProviderToken{
             token:"idk_a_token_i_guess".into()
     })
@@ -155,3 +169,4 @@ pub async fn disconnect() -> Json<DisconnectedAccount>  {
         }
     )
 }
+

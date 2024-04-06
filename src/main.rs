@@ -22,19 +22,21 @@ async fn main() {
     let addr = leptos_options.site_addr;
     let routes = generate_route_list(App);
 
-    // build our application with a route
     let app = Router::new()
-        .leptos_routes(&leptos_options, routes, App)
-        .nest("/idp",fedcm_example_rp::idp::idp_router())
-        .fallback(file_and_error_handler)
-        .with_state(leptos_options)
-        .layer(tower_http::trace::TraceLayer::new_for_http());
+    .leptos_routes(&leptos_options, routes, App)
+    .nest("/idp",fedcm_example_rp::idp::idp_router())
+    .fallback(file_and_error_handler)
+    .with_state(leptos_options)
+    .layer(tower_http::trace::TraceLayer::new_for_http());
 
     let listener = tokio::net::TcpListener::bind(&addr).await.unwrap();
     logging::log!("listening on http://{}", &addr);
+    
     axum::serve(listener, app.into_make_service())
         .await
         .unwrap();
+
+    
 }
 
 

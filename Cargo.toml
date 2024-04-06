@@ -9,7 +9,7 @@ crate-type = ["cdylib", "rlib"]
 [dependencies]
 axum = { version = "0.7", optional = true, features = ["json","tracing"] }
 console_error_panic_hook = "0.1"
-leptos = { version = "0.6"}
+leptos = { version = "0.6.10"}
 leptos_axum = { version = "0.6", optional = true }
 leptos_meta = { version = "0.6" }
 leptos_router = { version = "0.6" }
@@ -22,11 +22,17 @@ tracing = { version = "0.1", optional = true }
 http = "1"
 serde_json = {version= "1.0.115", optional=true}
 serde = "1.0.197"
-tracing-subscriber = {verison="0.3.18",optional=true,features=["env-filter"]}
+tracing-subscriber = {version="0.3.18",optional=true,features=["env-filter"]}
+js-sys = "0.3.69"
+axum-extra = {version="0.9.3",features=["cookie"], optional = true}
+# I extended web_sys with the IDL from the FedCM specification. But there was a codegen bug https://github.com/rustwasm/wasm-bindgen/issues/3916
+#web_sys = { git = "https://github.com/sjud/wasm-bindgen", branch = "fedcm_idl", features=["CredentialsContainer","Navigator","IdentityCredentialRequestOptions"] }
+
 
 [features]
 hydrate = ["leptos/hydrate", "leptos_meta/hydrate", "leptos_router/hydrate"]
 ssr = [
+    "dep:axum-extra",
     "dep:tracing-subscriber",
     "dep:serde_json",
     "dep:axum",
@@ -71,7 +77,7 @@ assets-dir = "public"
 site-addr = "127.0.0.1:3000"
 
 # The port to use for automatic reload monitoring
-reload-port = 3001
+reload-port = 3002
 
 # [Optional] Command to use when running end2end tests. It will run in the end2end dir.
 #   [Windows] for non-WSL use "npx.cmd playwright test"
