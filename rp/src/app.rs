@@ -36,9 +36,6 @@ pub fn App() -> impl IntoView {
 }
 
 
-
-
-
 // https://developer.mozilla.org/en-US/docs/Web/API/FedCM_API/RP_sign-in
 #[component]
 fn Rp() -> impl IntoView {
@@ -68,7 +65,6 @@ fn Rp() -> impl IntoView {
                 identity: {
                   providers: [{
                     configURL: "any",
-                    //registered:true,
                     clientId: "my_client_id",
                     nonce: "123",
                   }]
@@ -79,7 +75,7 @@ fn Rp() -> impl IntoView {
                 console.log('Credential obtained:', credential);
               })
               .catch((error) => {
-                paragraph.innerText = "You have to sign in with the identity provider first.";
+                paragraph.innerText = 'Error obtaining credentials: ', error.name + ' ' + error.message;
                 console.error('Error obtaining credentials: ', error.name + ' ' + error.message);
               });
         } else {

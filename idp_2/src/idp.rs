@@ -39,7 +39,6 @@ pub fn idp_router() -> Router<LeptosOptions> {
         .route("/assertion",post(assertion))
         .route("/disconnect",post(disconnect))
         .route("/accounts",get(accounts))
-        .route("/register",get(config))
 }
 
 #[derive(Clone,Debug,PartialEq,Serialize,Deserialize)]
@@ -184,7 +183,3 @@ pub async fn disconnect() -> Json<DisconnectedAccount>  {
     )
 }
 
-#[tracing::instrument(ret)]
-pub async fn register() -> () {
-    
-}

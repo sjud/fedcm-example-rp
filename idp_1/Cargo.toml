@@ -23,7 +23,7 @@ serde_json = {version= "1.0.115", optional=true}
 serde = "1.0.197"
 tracing-subscriber = {version="0.3.18",optional=true,features=["env-filter"]}
 js-sys = "0.3.69"
-axum-extra = {version="0.9.3",features=["cookie"], optional = true}
+axum-extra = {version="0.9.3",features=["cookie","typed-header"], optional = true}
 # I extended web_sys with the IDL from the FedCM specification. But there was a codegen bug https://github.com/rustwasm/wasm-bindgen/issues/3916
 #web_sys = { git = "https://github.com/sjud/wasm-bindgen", branch = "fedcm_idl", features=["CredentialsContainer","Navigator","IdentityCredentialRequestOptions"] }
 

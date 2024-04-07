@@ -12,6 +12,7 @@ use axum::{
     http::header::HeaderMap,
 };
 use axum_extra::{
+    TypedHeader,
     extract::cookie::CookieJar,
 };
 use leptos::LeptosOptions;
@@ -22,6 +23,7 @@ pub struct WebIdentity{
     provider_urls:Vec<String>
 }
 
+#[tracing::instrument(ret)]
 pub async fn wellknown() -> Json<WebIdentity> {
     Json(
         WebIdentity{
@@ -39,7 +41,7 @@ pub fn idp_router() -> Router<LeptosOptions> {
         .route("/assertion",post(assertion))
         .route("/disconnect",post(disconnect))
         .route("/accounts",get(accounts))
-        .route("/register",get(config))
+       // .route("/register",get(register))
 }
 
 #[derive(Clone,Debug,PartialEq,Serialize,Deserialize)]
@@ -164,9 +166,13 @@ pub struct IdentityProviderAssertionForm{
 }
 //account_id=123&client_id=client1234&nonce=Ct60bD&disclosure_text_shown=true
 #[tracing::instrument(ret)]
-pub async fn assertion(Form(f):Form<IdentityProviderAssertionForm>) -> Json<IdentityProviderToken> {
+pub async fn assertion(
+    Form(f):Form<IdentityProviderAssertionForm>,
+    // assertion endpoint should check SecFetchDest=webauthn (but I haven't implemented it yet)
+    //TypedHeader(_): TypedHeader<CustomSecFetchDestHeader>,
+) -> Json<IdentityProviderToken> {
     Json(IdentityProviderToken{
-            token:"idk_a_token_i_guess".into()
+            token:"adjfkladsjflksadjfladsjfadl;sfasdfjads;lfasljdsakldj".into()
     })
 }
 
@@ -175,8 +181,15 @@ pub struct DisconnectedAccount  {
     pub account_id:String,
 }
 
+#[derive(Clone,Debug,PartialEq,Serialize,Deserialize)]
+pub struct DisconnectForm{
+    pub account_hint:String,
+    pub client_id:String,
+}
 #[tracing::instrument(ret)]
-pub async fn disconnect() -> Json<DisconnectedAccount>  {
+pub async fn disconnect(
+    Form(_):Form<DisconnectForm>,
+) -> Json<DisconnectedAccount>  {
     Json(
         DisconnectedAccount{
             account_id:"123".into()
@@ -188,3 +201,5 @@ pub async fn disconnect() -> Json<DisconnectedAccount>  {
 pub async fn register() -> () {
     
 }
+
+
