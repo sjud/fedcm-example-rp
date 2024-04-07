@@ -1,9 +1,7 @@
-use std::str::FromStr;
 
 //https://github.com/achimschloss/fedcm-idp-typescript
 //https://fedcm-rp-demo.glitch.me/
 use crate::error_template::{AppError, ErrorTemplate};
-use http::{HeaderName, HeaderValue};
 use leptos::*;
 use leptos_meta::*;
 use leptos_router::*;
@@ -15,7 +13,7 @@ pub fn App() -> impl IntoView {
     view! {
         // injects a stylesheet into the document <head>
         // id=leptos means cargo-leptos will hot-reload this stylesheet
-        <Stylesheet id="leptos" href="/pkg/fedcm-example-rp.css"/>
+        <Stylesheet id="leptos" href="/pkg/rp.css"/>
 
         <Title text="RP App"/>
 
@@ -30,9 +28,7 @@ pub fn App() -> impl IntoView {
         }>
             <main>
                 <Routes>
-                    <Route path="" view=HomePage/>
-                    <Route path="rp" view=Rp/>
-                    <Route path="idp" view=Idp/>
+                    <Route path="" view=Rp/>
                 </Routes>
             </main>
         </Router>
@@ -41,20 +37,7 @@ pub fn App() -> impl IntoView {
 
 
 
-/// Renders the home page of your application.
-#[component]
-fn HomePage() -> impl IntoView {
-    view! {
-        <div> Sign in With IDP first </div>
-        <div>
-        <A href="idp">"Click to go to the IDP"</A>
-        </div>
-        <div> Then sign in to the RP (it relies on the IDP)</div>
-        <div>
-        <A href="rp">"Click to go to the RP"</A>
-        </div>
-    }
-}
+
 
 // https://developer.mozilla.org/en-US/docs/Web/API/FedCM_API/RP_sign-in
 #[component]
@@ -62,8 +45,13 @@ fn Rp() -> impl IntoView {
     // sign into the relying party by signing into the idp
     let rp_signin = create_rw_signal(false);
     let rp_show_user_info = create_rw_signal(false);
-
     view!{
+        <div>
+        <a href="http://127.0.0.2:3001">IDP 1</a>
+        </div>
+        <div>
+        <a href="http://127.0.0.3:3002">IDP 2</a>
+        </div>
         <div>
         <button on:click=move|_|rp_signin.set(!rp_signin.get_untracked())>{
             move || if rp_signin.get() {
@@ -78,9 +66,9 @@ fn Rp() -> impl IntoView {
         if ('IdentityCredential' in window) {
             navigator.credentials.get({
                 identity: {
-                    context:"continue",
                   providers: [{
-                    configURL: "http://127.0.0.1:3000/idp/config",
+                    configURL: "any",
+                    //registered:true,
                     clientId: "my_client_id",
                     nonce: "123",
                   }]
@@ -101,6 +89,16 @@ fn Rp() -> impl IntoView {
         </Script>
         </Show>
         </div>
+
+        <p id="user_msg"></p>
+
+    }
+}
+
+
+
+
+
         /* https://github.com/fedidcg/FedCM/issues/554 ???
         <div>
         <button on:click=move|_|rp_show_user_info.set(!rp_show_user_info.get_untracked())>{
@@ -151,34 +149,3 @@ fn Rp() -> impl IntoView {
         <p id="user_name"></p>
         <p id="user_email"></p>
         <img id="user_img"/>*/
-        <p id="user_msg"></p>
-
-    }
-}
-#[server]
-pub async fn signin() -> Result<(),ServerFnError> {
-    let opts = expect_context::<leptos_axum::ResponseOptions>();
-    opts.insert_header(HeaderName::from_str("set-login")?,HeaderValue::from_static("logged-in"));
-    Ok(())
-}
-#[server]
-pub async fn signout() -> Result<(),ServerFnError> {
-    let opts = expect_context::<leptos_axum::ResponseOptions>();
-    opts.insert_header(HeaderName::from_str("set-login")?,HeaderValue::from_static("logged-out"));
-    Ok(())
-}
-
-// https://developer.mozilla.org/en-US/docs/Web/API/FedCM_API/IDP_integration
-#[component]
-fn Idp() -> impl IntoView {
-    // Sign into IDP
-    let idp_sign_in = Action::<Signin,_>::server();
-    let idp_sign_out = Action::<Signout,_>::server();
-
-    view!{
-        <button on:click=move|_|idp_sign_in.dispatch(Signin{})>"Sign In"</button>
-        <button on:click=move|_|idp_sign_out.dispatch(Signout{})>"Sign Out"</button>
-    }
-}
-
-

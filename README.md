@@ -15,4 +15,9 @@ cast
 cargo leptos serve
 ```
 
-And go to `http://127.0.0.1:3000/`
+if on unix you might need to add 127.0.0.2 and 127.0.0.3 
+i.e
+`sudo ifconfig lo0 alias 127.0.0.3 up`
+`sudo ifconfig lo0 alias 127.0.0.2 up`
+
+And go to `http://127.0.0.1:3000/` for rp 

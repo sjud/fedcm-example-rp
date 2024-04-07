@@ -1,6 +1,5 @@
 [package]
-name = "fedcm-example-rp"
-version = "0.1.0"
+name= "rp"
 edition = "2021"
 
 [lib]
@@ -10,9 +9,9 @@ crate-type = ["cdylib", "rlib"]
 axum = { version = "0.7", optional = true, features = ["json","tracing"] }
 console_error_panic_hook = "0.1"
 leptos = { version = "0.6.10"}
-leptos_axum = { version = "0.6", optional = true }
-leptos_meta = { version = "0.6" }
-leptos_router = { version = "0.6" }
+leptos_axum = { version = "0.6.10", optional = true }
+leptos_meta = { version = "0.6.10" }
+leptos_router = { version = "0.6.10" }
 tokio = { version = "1", features = ["rt-multi-thread"], optional = true }
 tower = { version = "0.4", optional = true }
 tower-http = { version = "0.5", features = ["fs","trace"], optional = true }
@@ -27,6 +26,8 @@ js-sys = "0.3.69"
 axum-extra = {version="0.9.3",features=["cookie"], optional = true}
 # I extended web_sys with the IDL from the FedCM specification. But there was a codegen bug https://github.com/rustwasm/wasm-bindgen/issues/3916
 #web_sys = { git = "https://github.com/sjud/wasm-bindgen", branch = "fedcm_idl", features=["CredentialsContainer","Navigator","IdentityCredentialRequestOptions"] }
+
+
 
 
 [features]
@@ -46,17 +47,9 @@ ssr = [
     "dep:tracing",
 ]
 
-# Defines a size-optimized profile for the WASM bundle in release mode
-[profile.wasm-release]
-inherits = "release"
-opt-level = 'z'
-lto = true
-codegen-units = 1
-panic = "abort"
-
 [package.metadata.leptos]
 # The name used by wasm-bindgen/cargo-leptos for the JS/WASM bundle. Defaults to the crate name
-output-name = "fedcm-example-rp"
+output-name = "rp"
 
 # The site root folder is where cargo-leptos generate all output. WARNING: all content of this folder will be erased on a rebuild. Use it in your server setup.
 site-root = "target/site"
@@ -77,7 +70,7 @@ assets-dir = "public"
 site-addr = "127.0.0.1:3000"
 
 # The port to use for automatic reload monitoring
-reload-port = 3002
+reload-port = 3003
 
 # [Optional] Command to use when running end2end tests. It will run in the end2end dir.
 #   [Windows] for non-WSL use "npx.cmd playwright test"

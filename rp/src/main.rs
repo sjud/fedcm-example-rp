@@ -4,8 +4,8 @@ async fn main() {
     use axum::Router;
     use leptos::*;
     use leptos_axum::{generate_route_list, LeptosRoutes};
-    use fedcm_example_rp::app::*;
-    use fedcm_example_rp::fileserv::file_and_error_handler;
+    use rp::app::*;
+    use rp::fileserv::file_and_error_handler;
     tracing_subscriber::fmt()
     .pretty()
     // enable everything
@@ -24,7 +24,6 @@ async fn main() {
 
     let app = Router::new()
     .leptos_routes(&leptos_options, routes, App)
-    .nest("/idp",fedcm_example_rp::idp::idp_router())
     .fallback(file_and_error_handler)
     .with_state(leptos_options)
     .layer(tower_http::trace::TraceLayer::new_for_http());

@@ -17,15 +17,29 @@ use axum_extra::{
 use leptos::LeptosOptions;
 use serde::{Serialize,Deserialize};
 
+#[derive(Serialize,Deserialize,PartialEq,Clone,Debug)]
+pub struct WebIdentity{
+    provider_urls:Vec<String>
+}
+
+pub async fn wellknown() -> Json<WebIdentity> {
+    Json(
+        WebIdentity{
+            provider_urls:vec!["http://127.0.0.2:3001/idp/config".into()]
+        } 
+    )
+}
+
 pub fn idp_router() -> Router<LeptosOptions> {
     Router::<LeptosOptions>::new()
-        .route("/config",get(config))
         .route("/tos",get(tos))
-        .route("/privacy_policy",get(privacy_policy))
+        .route("/config",get(config))
+        .route("/privacy_policy",get(privacy_policy) )
         .route("/metadata",get(metadata))
         .route("/assertion",post(assertion))
         .route("/disconnect",post(disconnect))
         .route("/accounts",get(accounts))
+        .route("/register",get(config))
 }
 
 #[derive(Clone,Debug,PartialEq,Serialize,Deserialize)]
@@ -63,7 +77,7 @@ pub async fn config() -> Json<IdentityProviderAPIConfig> {
             color: "#FFEEAA".into(),
             icons: vec![
                 IdentityProviderIcon {
-                    url: "http://127.0.0.1:3000/favicon.ico".into(),
+                    url: "http://127.0.0.2:3001/favicon.ico".into(),
                     size: 25, // Consider changing to a numeric type if applicable
                 },
             ],
@@ -100,13 +114,13 @@ pub async fn accounts(
         accounts: vec![
             IdentityProviderAccount {
                 id: "123".into(),
-                name: "Jane Doe".into(),
-                email: "jane.doe@example.com".into(),
-                given_name: Some("Jane".into()),
-                picture: Some("http://127.0.0.1:3000/app_user.png".into()),
-                approved_clients: vec!["client1".into(), "client2".into()],
-                login_hints: vec!["hint1".into(), "hint2".into()],
-                domain_hints: vec!["example.com".into()],
+                name: "Business Wolf".into(),
+                email: "wolf@business.com".into(),
+                given_name: Some("Big Bad Wolf".into()),
+                picture: Some("http://127.0.0.2:3001/business_wolf.png".into()),
+                approved_clients: vec![],
+                login_hints: vec![],
+                domain_hints: vec![],
             },
             // Add more accounts as needed
         ],
@@ -170,3 +184,7 @@ pub async fn disconnect() -> Json<DisconnectedAccount>  {
     )
 }
 
+#[tracing::instrument(ret)]
+pub async fn register() -> () {
+    
+}
