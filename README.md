@@ -12,6 +12,7 @@ but otherwise
 cast
 
 ```sh
+rustup target add wasm32-unknown-unknown
 cargo leptos serve
 ```
 
