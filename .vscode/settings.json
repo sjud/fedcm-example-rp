@@ -1,9 +1,8 @@
 {
     "rust-analyzer.linkedProjects": [
-        "./Cargo.toml",
-        "./Cargo.toml",
-        "./Cargo.toml",
-        "./Cargo.toml"
+        "./idp_1/Cargo.toml",
+        "./idp_2/Cargo.toml",
+        "./rp/Cargo.toml",
     ],
     "rust-analyzer.showUnlinkedFileNotification": false
 }

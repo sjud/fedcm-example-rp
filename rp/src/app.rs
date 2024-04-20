@@ -65,7 +65,7 @@ fn Rp() -> impl IntoView {
                 identity: {
                   providers: [{
                     configURL: "any",
-                    clientId: "my_client_id",
+                    clientId: "http://127.0.0.1:3000",
                     nonce: "123",
                   }]
                 }
@@ -75,7 +75,7 @@ fn Rp() -> impl IntoView {
                 console.log('Credential obtained:', credential);
               })
               .catch((error) => {
-                paragraph.innerText = 'Error obtaining credentials: ', error.name + ' ' + error.message;
+                paragraph.innerText = 'Error obtaining credentials: ' + error.name + ' ' + error.message;
                 console.error('Error obtaining credentials: ', error.name + ' ' + error.message);
               });
         } else {

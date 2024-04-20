@@ -41,7 +41,6 @@ pub fn idp_router() -> Router<LeptosOptions> {
         .route("/assertion",post(assertion))
         .route("/disconnect",post(disconnect))
         .route("/accounts",get(accounts))
-       // .route("/register",get(register))
 }
 
 #[derive(Clone,Debug,PartialEq,Serialize,Deserialize)]
@@ -120,11 +119,10 @@ pub async fn accounts(
                 email: "wolf@business.com".into(),
                 given_name: Some("Big Bad Wolf".into()),
                 picture: Some("http://127.0.0.2:3001/business_wolf.png".into()),
-                approved_clients: vec![],
+                approved_clients: vec!["http://127.0.0.1:3000".to_string()],
                 login_hints: vec![],
                 domain_hints: vec![],
             },
-            // Add more accounts as needed
         ],
     })
 }
@@ -167,10 +165,18 @@ pub struct IdentityProviderAssertionForm{
 //account_id=123&client_id=client1234&nonce=Ct60bD&disclosure_text_shown=true
 #[tracing::instrument(ret)]
 pub async fn assertion(
+    jar: CookieJar,
+    headers: HeaderMap,
     Form(f):Form<IdentityProviderAssertionForm>,
     // assertion endpoint should check SecFetchDest=webauthn (but I haven't implemented it yet)
     //TypedHeader(_): TypedHeader<CustomSecFetchDestHeader>,
 ) -> Json<IdentityProviderToken> {
+    if jar.iter().next().is_none() {
+        tracing::debug!("NO COOKIES");
+    }
+    for h in headers.iter() {
+        tracing::debug!("{h:#?}");
+    }
     Json(IdentityProviderToken{
             token:"adjfkladsjflksadjfladsjfadl;sfasdfjads;lfasljdsakldj".into()
     })
@@ -197,9 +203,6 @@ pub async fn disconnect(
     )
 }
 
-#[tracing::instrument(ret)]
-pub async fn register() -> () {
-    
-}
+ 
 
 

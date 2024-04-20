@@ -77,7 +77,7 @@ pub async fn config() -> Json<IdentityProviderAPIConfig> {
             icons: vec![
                 IdentityProviderIcon {
                     url: "http://127.0.0.3:3002/favicon.ico".into(),
-                    size: 25, // Consider changing to a numeric type if applicable
+                    size: 25,
                 },
             ],
             name: "Leptos IDP Example".into(),
@@ -121,7 +121,6 @@ pub async fn accounts(
                 login_hints: vec![],
                 domain_hints: vec![],
             },
-            // Add more accounts as needed
         ],
     })
 }
@@ -146,7 +145,7 @@ pub async fn privacy_policy() -> String {
 }
 #[tracing::instrument(ret)]
 pub async fn tos() -> String {
-    "No TOS oopsies".to_string()
+    "No TOS".to_string()
 }
 
 #[derive(Clone,Debug,PartialEq,Serialize,Deserialize)]
@@ -161,11 +160,10 @@ pub struct IdentityProviderAssertionForm{
     pub nonce:String,
     pub disclosure_text_shown:bool 
 }
-//account_id=123&client_id=client1234&nonce=Ct60bD&disclosure_text_shown=true
 #[tracing::instrument(ret)]
 pub async fn assertion(Form(f):Form<IdentityProviderAssertionForm>) -> Json<IdentityProviderToken> {
     Json(IdentityProviderToken{
-            token:"idk_a_token_i_guess".into()
+            token:"asjo;asdfjadlsfsadpufdosafjsdkflkshgapf;".into()
     })
 }
 
@@ -174,12 +172,22 @@ pub struct DisconnectedAccount  {
     pub account_id:String,
 }
 
+#[derive(Clone,Debug,PartialEq,Serialize,Deserialize)]
+pub struct DisconnectForm{
+    pub account_hint:String,
+    pub client_id:String,
+}
 #[tracing::instrument(ret)]
-pub async fn disconnect() -> Json<DisconnectedAccount>  {
+pub async fn disconnect(
+    Form(_):Form<DisconnectForm>,
+) -> Json<DisconnectedAccount>  {
     Json(
         DisconnectedAccount{
             account_id:"123".into()
         }
     )
 }
+
+ 
+
 

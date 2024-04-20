@@ -1,11 +1,15 @@
 #[cfg(feature = "ssr")]
 #[tokio::main]
 async fn main() {
+    use tower_http::cors::{CorsLayer};
     use axum::Router;
     use leptos::*;
     use leptos_axum::{generate_route_list, LeptosRoutes};
     use idp_1::app::*;
     use idp_1::fileserv::file_and_error_handler;
+    use http::HeaderValue;
+    use http::Method;
+
     tracing_subscriber::fmt()
     .pretty()
     // enable everything
@@ -28,9 +32,17 @@ async fn main() {
     .nest("/idp",idp_1::idp::idp_router())
     .fallback(file_and_error_handler)
     .with_state(leptos_options)
-    .layer(tower_http::trace::TraceLayer::new_for_http());
+    .layer(tower_http::trace::TraceLayer::new_for_http())
+    .layer(
+        CorsLayer::very_permissive()
+                //.allow_origin("http://127.0.0.1:3000".parse::<HeaderValue>().unwrap())
+                //.allow_credentials(true)
+                //.allow_methods([Method::GET, Method::POST, Method::OPTIONS])
+                //.allow_headers([http::header::CONTENT_TYPE])
+    );
 
     let listener = tokio::net::TcpListener::bind(&addr).await.unwrap();
+    
     logging::log!("listening on http://{}", &addr);
     
     axum::serve(listener, app.into_make_service())

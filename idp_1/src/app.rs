@@ -73,6 +73,7 @@ fn Idp() -> impl IntoView {
         }</button>
         <Show when=move||idp_register.get()>
         <Script>r#"
+        document.cookie = "a=cookieValue; expires=Thu, 01 Jan 2026 00:00:00 UTC; Secure; SameSite=Lax";
         IdentityProvider.register('http://127.0.0.2:3001/idp/config')
             .then((thing) => {
                 console.log(thing);
